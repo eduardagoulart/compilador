@@ -27,6 +27,7 @@ module Lexema
         # reservados << valor
         reservados << Token::MY_HASH[valor]
 
+      # @todo: match com [] não acho expressão regular válida
       elsif valor.match(';') or valor.match('{') or valor.match('}')
         reservados << Token::MY_HASH[valor]
 
@@ -35,8 +36,8 @@ module Lexema
 
       elsif valor.match(/[+-]?[0-9]/)
         reservados << :INTEGER_CONST
-        
-      elsif valor.match(/[a-zA-Z]/)
+
+      elsif valor.match(/\w/)
         reservados << :ID
 
       elsif valor.match(/\s\n/) or valor.match(/(.|\s)*/)
