@@ -26,14 +26,19 @@ module Lexema
       if Token::MY_HASH[valor]
         # reservados << valor
         reservados << Token::MY_HASH[valor]
+
       elsif valor.match(';') or valor.match('{') or valor.match('}')
         reservados << Token::MY_HASH[valor]
-      elsif valor.match(/[0-9]/)
-        reservados << :INTEGER_CONST
-      elsif valor.match(/[0-9]\.[0-9]/)
+
+      elsif valor.match(/[+-]?[0-9][.][0-9]/)
         reservados << :FLOAT_CONT
+
+      elsif valor.match(/[+-]?[0-9]/)
+        reservados << :INTEGER_CONST
+        
       elsif valor.match(/[a-zA-Z]/)
         reservados << :ID
+
       elsif valor.match(/\s\n/) or valor.match(/(.|\s)*/)
         next
       else
@@ -43,7 +48,6 @@ module Lexema
       end
     end
     puts reservados.join(" ")
-
   end
 end
 

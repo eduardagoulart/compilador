@@ -1,6 +1,6 @@
 int main ( ) {
-    int x = 22.3 ;
-    int y = 9 ;
+    int x = 24.3 ;
+    int y = -9 ;
     int soma ;
     soma = x + y ;
 }
