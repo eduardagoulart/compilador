@@ -1,16 +1,19 @@
 require_relative 'tokens'
 
-letras = []
+module Lexema
+  def le_arquivo
+    letras = []
 
-f = File.open('soma.c', 'r')
-f.each_char do |char|
-  letras << char
+    f = File.open('soma.c', 'r')
+    f.each_char do |char|
+      letras << char
+    end
+    f.close
+
+    puts letras
+    puts Token::MY_HASH
+  end
 end
-f.close
 
-puts letras[0]
-letras = letras.join
-puts letras
-
-puts letras[0]
-puts Token::MY_HASH
+include Lexema
+puts le_arquivo
