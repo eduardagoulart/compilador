@@ -10,10 +10,22 @@ module Lexema
     end
     f.close
 
-    puts letras
-    puts Token::MY_HASH
+    return letras
+  end
+
+  # TODO: aprender a ler o vetor: a cada vez que achar uma letra, vai até encontrar um espaço
+  def tokeniza
+    entrada = le_arquivo
+
+    token = []
+    entrada.each do |valor|
+      if valor.match(/[a-zA-Z]/)
+        puts valor
+      end
+    end
+
   end
 end
 
 include Lexema
-puts le_arquivo
+tokeniza
