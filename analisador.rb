@@ -19,7 +19,7 @@ module Lexema
 
     token = []
     entrada.each do |valor|
-      if valor.match(/[a-zA-Z]/)
+      if valor.match(/[a-zA-Z\s]/)
         puts valor
       end
     end
