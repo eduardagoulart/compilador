@@ -52,5 +52,47 @@ module Lexema
   end
 end
 
-include Lexema
-tokeniza
+module AnalisadorLexico
+  def arquivo
+    reservados = []
+    letras = []
+
+    f = File.open('soma.c', 'r')
+
+    f.each_char do |char|
+      if char.match(/\w/)
+        letras << char
+      elsif !char.match(/\w/)
+        if letras.size > 0
+          letras = letras.join
+          if Token::MY_HASH[letras]
+            reservados << [Token::MY_HASH[letras], letras]
+          else
+            reservados << [:ID, letras]
+          end
+          letras = []
+        elsif char.match(/[+-]?[0-9][.][0-9]/)
+          reservados << [:FLOAT_CONT, char]
+        elsif char.match(/[+-]?[0-9]/)
+          reservados << [:INTEGER_CONST, char]
+        else
+          if Token::MY_HASH[char]
+            reservados << [Token::MY_HASH[char], char]
+            elsif char.match(/\s/)
+          else
+            puts reservados
+            puts "#{char} - não pertence"
+            exit
+          end
+        end
+      end
+    end
+
+    puts reservados
+    f.close
+
+  end
+end
+
+include AnalisadorLexico
+arquivo
