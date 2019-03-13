@@ -144,6 +144,10 @@ module Teste
               if Token::MY_HASH[char]
                 reservados << Token::MY_HASH[char]
               elsif char.match(/[0-9]/)
+                puts "each - #{char}"
+                numero << char
+              elsif char.match(/\./)
+                puts "pontinho #{char}"
                 numero << char
               end
             end
@@ -158,8 +162,9 @@ module Teste
             puts "numero - #{numero}"
           if numero.match(/([0-9])+[.]([0-9])+/)
             puts "numero 2- #{numero}"
-            reservados << [:FLOAT_CONT, char]
+            reservados << [:FLOAT_CONST, char]
             numero = []
+            next
           elsif numero.match(/([0-9])+/)
             reservados << :INTEGER_CONST
             numero = []
