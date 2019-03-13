@@ -123,8 +123,8 @@ module Teste
     numero = []
     num = " "
     t = []
+    flag = false
     file = File.open('soma.c', 'r')
-    i = 0
 
     file.each_char do |char|
       if char =~ /[a-zA-Z]/
@@ -144,15 +144,12 @@ module Teste
             t.each_with_index do |char|
               if Token::MY_HASH[char]
                 reservados << Token::MY_HASH[char]
-                puts "reservados #{reservados}"
+                flag = true if Token::MY_HASH[char].match("PCOMMA")
                 numero = []
                 num.clear
               elsif char =~ /[0-9]/
-                puts "each - #{char}"
-                # puts "prox char #{file[t.index(char) + 1] }"
                 numero << char
               elsif char =~ /\./
-                puts "pontinho #{char}"
                 numero << char
               end
             end
@@ -163,22 +160,16 @@ module Teste
         if numero.size > 0
           numero = numero.join
           num << numero
-          puts "num = #{num}"
-          puts "numero = #{numero}"
           numero = num.clone
-          #puts "numero - #{numero}"
-          # puts reservados
           if numero =~ /([0-9])+[.]([0-9])+/
-            puts "numero no float- #{numero}"
             reservados << :FLOAT_CONST
-            puts "reservados no float #{reservados}"
             numero = []
             num.clear
           elsif numero =~ /([0-9])+/
-            # puts "numero no int- #{numero}"
-            reservados << :INTEGER_CONST
+            if flag
+              reservados << :INTEGER_CONST
+            end
             numero = []
-            # puts "numero dps do int #{numero}"
           end
         end
 
