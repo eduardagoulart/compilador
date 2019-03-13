@@ -26,13 +26,13 @@ module Lexema
       if Token::MY_HASH[valor]
         reservados << Token::MY_HASH[valor]
         puts valor
-      elsif valor.match(/[+-]?[0-9][.][0-9]/)
+      elsif valor =~ /[+-]?[0-9][.][0-9]/
         reservados << :FLOAT_CONT
 
-      elsif valor.match(/[+-]?[0-9]/)
+      elsif valor =~ /[+-]?[0-9]/
         reservados << :INTEGER_CONST
 
-      elsif valor.match(/[a-zA-Z]/)
+      elsif valor =~ /[a-zA-Z]/
         reservados << :ID
       elsif valor.match(/\s/) or valor.match(/(.|\s)*/)
       else
@@ -61,7 +61,7 @@ module AnalisadorLexico
     f = File.open('soma.c', 'r')
 
     f.each_char do |char|
-      if char.match(/\w/)
+      if char =~ /\w/
         letras << char
       elsif !char.match(/w/)
         if letras.size > 0
@@ -70,9 +70,9 @@ module AnalisadorLexico
           t << char
           if Token::MY_HASH[letras]
             reservados << [Token::MY_HASH[letras], letras]
-          elsif char.match(/[+-]?[0-9][.][0-9]/)
+          elsif char =~ /[+-]?[0-9][.][0-9]/
             reservados << [:FLOAT_CONT, char]
-          elsif char.match(/[+-]?[0-9]/)
+          elsif char =~ /[+-]?[0-9]/
             reservados << [:INTEGER_CONST, char]
           elsif !char.match(/\s/)
             puts char
@@ -81,14 +81,14 @@ module AnalisadorLexico
             reservados << [:ID, letras]
           end
           letras = []
-        elsif char.match(/[+-]?[0-9][.][0-9]/)
+        elsif char =~ /[+-]?[0-9][.][0-9]/
           reservados << [:FLOAT_CONT, char]
-        elsif char.match(/[+-]?[0-9]/)
+        elsif char =~ /[+-]?[0-9]/
           reservados << [:INTEGER_CONST, char]
         else
           if Token::MY_HASH[char]
             reservados << [Token::MY_HASH[char], char]
-          elsif char.match(/\s/)
+          elsif char =~ /\s/
           else
             puts reservados
             puts "#{char} - não pertence"
@@ -98,7 +98,7 @@ module AnalisadorLexico
       else
         if Token::MY_HASH[char]
           reservados << [Token::MY_HASH[char], char]
-        elsif char.match(/\s/)
+        elsif char =~ /\s/
         else
           puts reservados
           puts "#{char} - não pertence"
@@ -122,11 +122,12 @@ module Teste
     reservados = []
     numero = []
     num = " "
-    t=[]
+    t = []
     file = File.open('soma.c', 'r')
+    i = 0
 
     file.each_char do |char|
-      if char.match(/[a-zA-Z]/)
+      if char =~ /[a-zA-Z]/
         letras << char
       else
         t << char
@@ -134,19 +135,23 @@ module Teste
           letras = letras.join
           if Token::MY_HASH[letras]
             reservados << Token::MY_HASH[letras]
-          elsif letras.match(/\w/)
+          elsif letras =~ /\w/
             reservados << :ID
           end
           letras = []
         else
           if t
-            t.each do |char|
+            t.each_with_index do |char|
               if Token::MY_HASH[char]
                 reservados << Token::MY_HASH[char]
-              elsif char.match(/[0-9]/)
+                puts "reservados #{reservados}"
+                numero = []
+                num.clear
+              elsif char =~ /[0-9]/
                 puts "each - #{char}"
+                # puts "prox char #{file[t.index(char) + 1] }"
                 numero << char
-              elsif char.match(/\./)
+              elsif char =~ /\./
                 puts "pontinho #{char}"
                 numero << char
               end
@@ -156,18 +161,24 @@ module Teste
         end
         # @todo: concatenar os numeros
         if numero.size > 0
-            numero = numero.join
-            num << numero
-            numero = num.clone
-            puts "numero - #{numero}"
-          if numero.match(/([0-9])+[.]([0-9])+/)
-            puts "numero 2- #{numero}"
-            reservados << [:FLOAT_CONST, char]
+          numero = numero.join
+          num << numero
+          puts "num = #{num}"
+          puts "numero = #{numero}"
+          numero = num.clone
+          #puts "numero - #{numero}"
+          # puts reservados
+          if numero =~ /([0-9])+[.]([0-9])+/
+            puts "numero no float- #{numero}"
+            reservados << :FLOAT_CONST
+            puts "reservados no float #{reservados}"
             numero = []
-            next
-          elsif numero.match(/([0-9])+/)
+            num.clear
+          elsif numero =~ /([0-9])+/
+            # puts "numero no int- #{numero}"
             reservados << :INTEGER_CONST
             numero = []
+            # puts "numero dps do int #{numero}"
           end
         end
 
