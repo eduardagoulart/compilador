@@ -121,6 +121,7 @@ module Teste
     letras = []
     reservados = []
     numero = []
+    num = " "
     t=[]
     file = File.open('soma.c', 'r')
 
@@ -151,9 +152,12 @@ module Teste
         end
         # @todo: concatenar os numeros
         if numero.size > 0
-          numero = numero.join
-          puts "numero - #{numero}"
+            numero = numero.join
+            num << numero
+            numero = num.clone
+            puts "numero - #{numero}"
           if numero.match(/([0-9])+[.]([0-9])+/)
+            puts "numero 2- #{numero}"
             reservados << [:FLOAT_CONT, char]
             numero = []
           elsif numero.match(/([0-9])+/)
