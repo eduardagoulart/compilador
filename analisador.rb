@@ -26,13 +26,13 @@ module Lexema
       if Token::MY_HASH[valor]
         reservados << Token::MY_HASH[valor]
         puts valor
-      elsif valor.match(/[+-]?[0-9][.][0-9]/)
+      elsif valor =~ /[+-]?[0-9][.][0-9]/
         reservados << :FLOAT_CONT
 
-      elsif valor.match(/[+-]?[0-9]/)
+      elsif valor =~ /[+-]?[0-9]/
         reservados << :INTEGER_CONST
 
-      elsif valor.match(/[a-zA-Z]/)
+      elsif valor =~ /[a-zA-Z]/
         reservados << :ID
       elsif valor.match(/\s/) or valor.match(/(.|\s)*/)
       else
@@ -61,7 +61,7 @@ module AnalisadorLexico
     f = File.open('soma.c', 'r')
 
     f.each_char do |char|
-      if char.match(/\w/)
+      if char =~ /\w/
         letras << char
       elsif !char.match(/w/)
         if letras.size > 0
@@ -70,9 +70,9 @@ module AnalisadorLexico
           t << char
           if Token::MY_HASH[letras]
             reservados << [Token::MY_HASH[letras], letras]
-          elsif char.match(/[+-]?[0-9][.][0-9]/)
+          elsif char =~ /[+-]?[0-9][.][0-9]/
             reservados << [:FLOAT_CONT, char]
-          elsif char.match(/[+-]?[0-9]/)
+          elsif char =~ /[+-]?[0-9]/
             reservados << [:INTEGER_CONST, char]
           elsif !char.match(/\s/)
             puts char
@@ -81,14 +81,14 @@ module AnalisadorLexico
             reservados << [:ID, letras]
           end
           letras = []
-        elsif char.match(/[+-]?[0-9][.][0-9]/)
+        elsif char =~ /[+-]?[0-9][.][0-9]/
           reservados << [:FLOAT_CONT, char]
-        elsif char.match(/[+-]?[0-9]/)
+        elsif char =~ /[+-]?[0-9]/
           reservados << [:INTEGER_CONST, char]
         else
           if Token::MY_HASH[char]
             reservados << [Token::MY_HASH[char], char]
-          elsif char.match(/\s/)
+          elsif char =~ /\s/
           else
             puts reservados
             puts "#{char} - não pertence"
@@ -98,7 +98,7 @@ module AnalisadorLexico
       else
         if Token::MY_HASH[char]
           reservados << [Token::MY_HASH[char], char]
-        elsif char.match(/\s/)
+        elsif char =~ /\s/
         else
           puts reservados
           puts "#{char} - não pertence"
@@ -122,10 +122,13 @@ module Teste
     reservados = []
     numero = []
     t = []
+    num = " "
+    t = []
+    flag = false
     file = File.open('soma.c', 'r')
 
     file.each_char do |char|
-      if char.match(/[a-zA-Z]/)
+      if char =~ /[a-zA-Z]/
         letras << char
       else
         t << char
@@ -133,16 +136,21 @@ module Teste
           letras = letras.join
           if Token::MY_HASH[letras]
             reservados << Token::MY_HASH[letras]
-          elsif letras.match(/\w/)
+          elsif letras =~ /\w/
             reservados << :ID
           end
           letras = []
         else
           if t
-            t.each do |char|
+            t.each_with_index do |char|
               if Token::MY_HASH[char]
                 reservados << Token::MY_HASH[char]
-              elsif char.match(/[0-9]/)
+                flag = true if Token::MY_HASH[char].match("PCOMMA")
+                numero = []
+                num.clear
+              elsif char =~ /[0-9]/
+                numero << char
+              elsif char =~ /\./
                 numero << char
 
               end
@@ -157,9 +165,16 @@ module Teste
           puts "numero - #{numero.size} - #{numero}"
           if numero.match(/([0-9])+[.]([0-9])+/)
             reservados << [:FLOAT_CONT, char]
+          num << numero
+          numero = num.clone
+          if numero =~ /([0-9])+[.]([0-9])+/
+            reservados << :FLOAT_CONST
             numero = []
-          elsif numero.match(/([0-9])+/)
-            reservados << :INTEGER_CONST
+            num.clear
+          elsif numero =~ /([0-9])+/
+            if flag
+              reservados << :INTEGER_CONST
+            end
             numero = []
           end
         end
