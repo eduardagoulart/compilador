@@ -121,7 +121,7 @@ module Teste
     letras = []
     reservados = []
     numero = []
-    t=[]
+    t = []
     file = File.open('soma.c', 'r')
 
     file.each_char do |char|
@@ -144,6 +144,7 @@ module Teste
                 reservados << Token::MY_HASH[char]
               elsif char.match(/[0-9]/)
                 numero << char
+
               end
             end
             t = []
@@ -151,8 +152,9 @@ module Teste
         end
         # @todo: concatenar os numeros
         if numero.size > 0
+          puts numero
           numero = numero.join
-          puts "numero - #{numero}"
+          puts "numero - #{numero.size} - #{numero}"
           if numero.match(/([0-9])+[.]([0-9])+/)
             reservados << [:FLOAT_CONT, char]
             numero = []
@@ -173,5 +175,39 @@ module Teste
   end
 end
 
-include Teste
-leitura_arquivo
+module Automata
+  def le_arquivo
+    letras = []
+
+    f = File.open('soma.c', 'r')
+    f.each_char do |char|
+      letras << char
+    end
+    f.close
+
+    return letras
+  end
+
+  def state_two
+
+  end
+
+  def state_zero()
+    final_result = []
+    input = le_arquivo
+    input.each do |char|
+      if char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}'
+        final_result << Token::MY_HASH[char]
+
+      elsif char.match(/\w/)
+        final_result << state_two
+      end
+
+    end
+    puts final_result
+  end
+
+end
+
+include Automata
+state_zero
