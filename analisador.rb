@@ -165,30 +165,32 @@ module Teste
           puts "numero - #{numero.size} - #{numero}"
           if numero.match(/([0-9])+[.]([0-9])+/)
             reservados << [:FLOAT_CONT, char]
-          num << numero
-          numero = num.clone
-          if numero =~ /([0-9])+[.]([0-9])+/
-            reservados << :FLOAT_CONST
-            numero = []
-            num.clear
-          elsif numero =~ /([0-9])+/
-            if flag
-              reservados << :INTEGER_CONST
+            num << numero
+            numero = num.clone
+            if numero =~ /([0-9])+[.]([0-9])+/
+              reservados << :FLOAT_CONST
+              numero = []
+              num.clear
+            elsif numero =~ /([0-9])+/
+              if flag
+                reservados << :INTEGER_CONST
+              end
+              numero = []
             end
-            numero = []
           end
-        end
 
+        end
       end
-    end
-    t.each do |char|
-      if Token::MY_HASH[char]
-        reservados << Token::MY_HASH[char]
+      t.each do |char|
+        if Token::MY_HASH[char]
+          reservados << Token::MY_HASH[char]
+        end
       end
+      puts reservados
     end
-    puts reservados
   end
 end
+
 
 module Automata
   def le_arquivo
@@ -203,23 +205,34 @@ module Automata
     return letras
   end
 
-  def state_two
-
+  def state_two(tokens)
+    if Token::MY_HASH[tokens]
+      return Token::MY_HASH[tokens]
+    else
+      return :ID
+    end
   end
 
-  def state_zero()
+  def state_zero
     final_result = []
+    tokens = []
     input = le_arquivo
     input.each do |char|
       if char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}'
         final_result << Token::MY_HASH[char]
-
-      elsif char.match(/\w/)
-        final_result << state_two
+      elsif char.match(/\w/) or char.match(/\s/)
+        tokens << char
       end
+      # puts tokens.length
+      tokens.join.split
+      # tokens.split(" ")
+      puts tokens
+      final_result << state_two(tokens)
+      # puts char
 
     end
-    puts final_result
+    # puts tokens
+    # puts final_result
   end
 
 end
