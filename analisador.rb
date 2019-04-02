@@ -42,7 +42,6 @@ module Teste
             t = []
           end
         end
-        # @todo: concatenar os numeros
         if numero.size > 0
           puts numero
           numero = numero.join
@@ -67,6 +66,7 @@ module Teste
       end
       t.each do |char|
         if Token::MY_HASH[char]
+          # @todo: concatenar os numeros
           reservados << Token::MY_HASH[char]
         end
       end
@@ -100,7 +100,7 @@ module Automata
   def state_zero
     final_result = []
     tokens = []
-    letras = []
+    numero = []
     t = []
     input = le_arquivo
     input.each do |char|
@@ -112,17 +112,37 @@ module Automata
           tokens = tokens.join
           final_result << state_two(tokens)
           tokens = []
+          if char == '('
+            final_result << Token::MY_HASH[char]
+          end
+
         elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+'
           final_result << Token::MY_HASH[char]
-        elsif char =~ /([0-9])+[.]([0-9])+/
-          final_result << :FLOAT_CONT
-        elsif char.match(/[0-9]+/)
-          final_result << :INTEGER_CONST
+          if char == ';'
+            # puts "#{numero} pcomma"
+            numero = numero.join
+            # puts numero
+            if numero.match(/[0-9]+[.][0-9]+/)
+              final_result << :FLOAT_CONST
+            elsif numero.match(/[.]([0-9])+/)
+              puts "Lexema não permitido"
+              exit!
+            elsif numero.match(/[0-9]+/)
+              final_result << :INTEGER_CONST
+            end
+            numero = []
+          end
+        elsif char.match(/[0-9]/) or char == '.' or char.match(';')
+          numero << char
+        else
 
+          "Lexema #{char} não pertencente a linguagem"
+          # exit!
         end
       end
     end
     puts final_result
+
   end
 end
 
