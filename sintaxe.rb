@@ -6,10 +6,6 @@ module AnalisadorSintatico
     @index = 0
     # puts @matriz[@index][1]
     programa()
-    # lexema.each_with_index do |valor, index|
-    #  programa(lexema[index], index)
-    #  lexema[index]
-    # end
   end
 
   def programa()
@@ -22,7 +18,8 @@ module AnalisadorSintatico
       # decl_comando()
       # casa("RBRACE")
     else
-      return "ERRO: INT esperado na linha #{@matriz[@index][2]}"
+      puts "ERRO: INT esperado na linha #{@matriz[@index][2]}"
+      @index += 1
     end
   end
 
@@ -44,6 +41,80 @@ module AnalisadorSintatico
       tipo()
       casa("ID")
       decl2()
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matrz[@index][2]}"
+      @index += 1
+    end
+  end
+
+  def decl2()
+    if @matriz[@index][1] == "COMMA"
+      casa("COMMA")
+      casa("ID")
+      decl2()
+    elsif @matriz[@index][1] == "PCOMMA"
+      casa("PCOMMA")
+    elsif @matriz[@index][1] == "ATTR"
+      casa("ATTR")
+      expressao()
+      decl2()
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
+      @index += 1
+    end
+  end
+
+  def tipo()
+    if @matriz[@index][1] == "INT"
+      casa("INT")
+    elsif @matriz[@index][1] == "FLOAT"
+      casa("FLOAT")
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
+      @index += 1
+    end
+  end
+
+  def comando()
+    if @matriz[@index][1] == "LBRACE"
+      bloco()
+    elsif @matriz[@index][1] == "ID"
+      atribuicao()
+    elsif @matriz[@index][1] == "IF"
+      comando_se()
+    elsif @matrix[@index][1] == "WHILE"
+      comando_enquanto()
+    elsif @matriz[@index][1] == "READ"
+      comando_read()
+    elsif @matrix[@index][1] == "PRINT"
+      comando_print()
+    elsif @matriz[@index][1] == "FOR"
+      comando_for()
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
+      @index += 1
+    end
+  end
+
+  def bloco()
+    if @matriz[@index][1] == "LBRACE"
+      casa("LBRACE")
+      decl_comando()
+      casa("RBRACE")
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
+      @index += 1
+    end
+  end
+
+  def atribuicao()
+    if @matriz[@index][1] == "ID"
+      casa("ID")
+      casa("ATTR")
+      expressao()
+      casa("PCOMMA")
+    else
+      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
     end
   end
 
@@ -59,8 +130,8 @@ module AnalisadorSintatico
     else
       puts "ERRO: Token esperado #{token_esperado} na linha #{@matriz[@index][2]}"
     end
-
   end
+
 end
 
 include AnalisadorSintatico
