@@ -26,6 +26,7 @@ module Automata
     tokens = []
     numero = []
     t = []
+    matriz_final = []
     input = le_arquivo
     input.each do |char|
       if char.match(/[a-zA-Z]/)
@@ -35,24 +36,29 @@ module Automata
         if tokens.size > 0
           tokens = tokens.join
           final_result << state_two(tokens)
+          matriz_final << [tokens, state_two(tokens)]
           tokens = []
           if char == '(' or char == '=' or char == ';' or char == '+' or char == '-'
             final_result << Token::MY_HASH[char]
+            matriz_final << [char, Token::MY_HASH[char]]
           end
         elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '='
           if char == ';'
             numero = numero.join
             if numero.match(/[0-9]+[.][0-9]+/)
               final_result << :FLOAT_CONST
+              matriz_final << [numero, :FLOAT_CONST]
             elsif numero.match(/[.]([0-9])+/)
               puts "Lexema não permitido"
               exit!
             elsif numero.match(/[0-9]+/)
               final_result << :INTEGER_CONST
+              matriz_final << [numero, :INTEGER_CONST]
             end
             numero = []
           end
           final_result << Token::MY_HASH[char]
+          matriz_final << [char, Token::MY_HASH[char]]
         elsif char.match(/[0-9]/) or char == '.' or char.match(';')
           numero << char
         else
@@ -63,7 +69,8 @@ module Automata
         end
       end
     end
-    puts final_result
+    puts matriz_final
+    return final_result, matriz_final
 
   end
 end
