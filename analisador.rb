@@ -112,11 +112,10 @@ module Automata
           tokens = tokens.join
           final_result << state_two(tokens)
           tokens = []
-          if char == '('
+          if char == '(' or char == '=' or char == ';' or char == '+' or char == '-'
             final_result << Token::MY_HASH[char]
           end
-
-        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+'
+        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '='
           final_result << Token::MY_HASH[char]
           if char == ';'
             # puts "#{numero} pcomma"
@@ -135,6 +134,7 @@ module Automata
         elsif char.match(/[0-9]/) or char == '.' or char.match(';')
           numero << char
         else
+          puts char
 
           "Lexema #{char} não pertencente a linguagem"
           # exit!
