@@ -3,5 +3,4 @@ int main(){
     int y3=-9;
     int soma;
     soma = x + y ;
-$
 }
