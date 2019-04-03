@@ -116,7 +116,6 @@ module Automata
             final_result << Token::MY_HASH[char]
           end
         elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '='
-          final_result << Token::MY_HASH[char]
           if char == ';'
             # puts "#{numero} pcomma"
             numero = numero.join
@@ -131,6 +130,7 @@ module Automata
             end
             numero = []
           end
+          final_result << Token::MY_HASH[char]
         elsif char.match(/[0-9]/) or char == '.' or char.match(';')
           numero << char
         else
