@@ -39,12 +39,12 @@ module Automata
           final_result << state_two(tokens)
           matriz_final << [tokens, state_two(tokens), line]
           tokens = []
-          if char == '(' or char == '=' or char == ';' or char == '+' or char == '-'
+          if char == ')' or char == '(' or char == '=' or char == ';' or char == '+' or char == '-' or char == '>' or char == '<' or char == '<=' or char == '>='
             final_result << Token::MY_HASH[char]
             matriz_final << [char, Token::MY_HASH[char], line]
           end
-        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '='
-          if char == ';'
+        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '=' or char == '>' or char == '<' or char == '<=' or char == '>='
+          if char == ';' or char == ',' or char == ')'
             numero = numero.join
             if numero.match(/[0-9]+[.][0-9]+/)
               final_result << :FLOAT_CONST
@@ -57,6 +57,11 @@ module Automata
               matriz_final << [numero, :INTEGER_CONST, line]
             end
             numero = []
+          elsif char == '>'
+            if input[input.index(char) + 1] == '='
+              final_result << Token::MY_HASH['>=']
+              next
+            end
           end
           final_result << Token::MY_HASH[char]
           matriz_final << [char, Token::MY_HASH[char], line]
@@ -72,7 +77,7 @@ module Automata
         end
       end
     end
-    puts matriz_final[0]
+    puts final_result
     return final_result, matriz_final
 
   end
@@ -80,3 +85,4 @@ end
 
 include Automata
 state_zero
+# puts state_zero

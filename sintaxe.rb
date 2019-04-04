@@ -4,7 +4,6 @@ module AnalisadorSintatico
   def analise_sintatica
     @token_entrada, @matriz = Automata::state_zero
     @index = 0
-    # puts @matriz[@index][1]
     programa()
   end
 
@@ -18,78 +17,72 @@ module AnalisadorSintatico
       decl_comando()
       casa("RBRACE")
     else
-      puts "ERRO: INT esperado na linha #{@matriz[@index][2]}"
-      @index += 1
+      retorna_erro
     end
   end
 
-  def decl_comando()
+  def decl_comando
     if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
       declaracao()
       decl_comando()
     elsif @matriz[@index][1].to_s == "LBRACE" or @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "IF" or
-      @matriz[@index][1] == "WHILE" or @matriz[@index][1] == "READ" or @matriz[@index][1] == "PRINT" or @matriz[@index][1] == "FOR"
+      @matriz[@index][1].to_s == "WHILE" or @matriz[@index][1].to_s == "READ" or @matriz[@index][1].to_s == "PRINT" or 
+      @matriz[@index][1].to_s == "FOR"
       comando()
       decl_comando()
-    else
-      @index += 1
     end
   end
 
   def declaracao()
-    if @matriz[@index][1] == "INT" or @matriz[@indez][1] == "FLOAT"
+    if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
       tipo()
       casa("ID")
       decl2()
     else
-      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matrz[@index][2]}"
-      @index += 1
+      retorna_erro
     end
   end
 
   def decl2()
-    if @matriz[@index][1] == "COMMA"
+    if @matriz[@index][1].to_s == "COMMA"
       casa("COMMA")
       casa("ID")
       decl2()
-    elsif @matriz[@index][1] == "PCOMMA"
+    elsif @matriz[@index][1].to_s == "PCOMMA"
       casa("PCOMMA")
-    elsif @matriz[@index][1] == "ATTR"
+    elsif @matriz[@index][1].to_s == "ATTR"
       casa("ATTR")
       expressao()
       decl2()
     else
-      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
-      @index += 1
+      retorna_erro
     end
   end
 
   def tipo()
-    if @matriz[@index][1] == "INT"
+    if @matriz[@index][1].to_s == "INT"
       casa("INT")
-    elsif @matriz[@index][1] == "FLOAT"
-      puts "PASSA aqui"
+    elsif @matriz[@index][1].to_s == "FLOAT"
       casa("FLOAT")
     else
-      puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
-      @index += 1
+      retorna_erro
     end
   end
 
   def comando()
-    if @matriz[@index][1] == "LBRACE"
+    if @matriz[@index][1].to_s == "LBRACE"
       bloco()
-    elsif @matriz[@index][1] == "ID"
+    elsif @matriz[@index][1].to_s == "ID"
       atribuicao()
-    elsif @matriz[@index][1] == "IF"
+    elsif @matriz[@index][1].to_s == "IF"
       comando_se()
-    elsif @matrix[@index][1] == "WHILE"
+    elsif @matriz[@index][1].to_s == "WHILE"
       comando_enquanto()
-    elsif @matriz[@index][1] == "READ"
+    elsif @matriz[@index][1].to_s == "READ"
       comando_read()
-    elsif @matrix[@index][1] == "PRINT"
+    elsif @matriz[@index][1].to_s == "PRINT"
       comando_print()
-    elsif @matriz[@index][1] == "FOR"
+    elsif @matriz[@index][1].to_s == "FOR"
       comando_for()
     else
       retorna_erro()
@@ -97,7 +90,7 @@ module AnalisadorSintatico
   end
 
   def bloco()
-    if @matriz[@index][1] == "LBRACE"
+    if @matriz[@index][1].to_s == "LBRACE"
       casa("LBRACE")
       decl_comando()
       casa("RBRACE")
@@ -107,7 +100,7 @@ module AnalisadorSintatico
   end
 
   def atribuicao()
-    if @matriz[@index][1] == "ID"
+    if @matriz[@index][1].to_s == "ID"
       casa("ID")
       casa("ATTR")
       expressao()
@@ -118,7 +111,7 @@ module AnalisadorSintatico
   end
 
   def comando_se()
-    if @matriz[@index][1] == "IF"
+    if @matriz[@index][1].to_s == "IF"
       casa("IF")
       casa("LBRACKET")
       expressao()
@@ -131,16 +124,14 @@ module AnalisadorSintatico
   end
 
   def comando_senao()
-    if @matriz[@index][1] == "ELSE"
+    if @matriz[@index][1].to_s == "ELSE"
       casa("ELSE")
       comando()
-    else
-      @index += 1
     end
   end
 
   def comando_enquanto()
-    if @matriz[@index][1] == "WHILE"
+    if @matriz[@index][1].to_s == "WHILE"
       casa("WHILE")
       casa("LBRACKET")
       expressao()
@@ -152,7 +143,7 @@ module AnalisadorSintatico
   end
 
   def comando_read()
-    if @matriz[@index][1] == "READ"
+    if @matriz[@index][1].to_s == "READ"
       casa("READ")
       casa("ID")
       casa("PCOMMA")
@@ -162,7 +153,7 @@ module AnalisadorSintatico
   end
 
   def comando_print()
-    if @matriz[@index][1] == "PRINT"
+    if @matriz[@index][1].to_s == "PRINT"
       casa("PRINT")
       casa("LBRACKET")
       expressao()
@@ -174,7 +165,7 @@ module AnalisadorSintatico
   end
 
   def comando_for()
-    if @matriz[@index][1] == "FOR"
+    if @matriz[@index][1].to_s == "FOR"
       casa("FOR")
       casa("LBRACKET")
       atribuicao_for()
@@ -187,10 +178,10 @@ module AnalisadorSintatico
   end
 
   def atribuicao_for()
-    if @matriz[@index][1] == "RBRACKET"
+    if @matriz[@index][1].to_s == "RBRACKET"
       casa("RBRACKET")
       comando()
-    elsif @matriz[@index][1] == "ID"
+    elsif @matriz[@index][1].to_s == "ID"
       casa("ID")
       casa("ATTR")
       expressao()
@@ -198,7 +189,7 @@ module AnalisadorSintatico
   end
 
   def expressao()
-    if @matriz[@index][1] == "ID" or @matriz[@index][1] == "INTEGER_CONST" or @matriz[@index][1] == "FLOAT_CONST" or @matriz[@index][1] == "LBRACKET"
+    if @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "INTEGER_CONST" or @matriz[@index][1].to_s == "FLOAT_CONST" or @matriz[@index][1].to_s == "LBRACKET"
       adicao()
       relacao_opc()
     else
@@ -207,23 +198,21 @@ module AnalisadorSintatico
   end
 
   def relacao_opc()
-    if @matriz[@index][1] == "LT" or @matriz[@index][1] == "LE" or @matriz[@index][1] == "GT" or @matriz[@index][1] == "GE"
+    if @matriz[@index][1].to_s == "LT" or @matriz[@index][1].to_s == "LE" or @matriz[@index][1].to_s == "GT" or @matriz[@index][1].to_s == "GE"
       op_rel()
       adicao()
       relacao_opc()
-    else
-      @index += 1
     end
   end
 
   def op_rel()
-    if @matriz[@index][1] == "LT"
+    if @matriz[@index][1].to_s == "LT"
       casa("LT")
-    elsif @matriz[@index][1] == "LE"
+    elsif @matriz[@index][1].to_s == "LE"
       casa("LE")
-    elsif @matriz[@index][1] == "GT"
+    elsif @matriz[@index][1].to_s == "GT"
       casa("GT")
-    elsif @matriz[@index][1] == "GE"
+    elsif @matriz[@index][1].to_s == "GE"
       casa("GE")
     else
       retorna_erro()
@@ -231,7 +220,7 @@ module AnalisadorSintatico
   end
 
   def adicao()
-    if @matriz[@index][1] == "ID" or @matriz[@index][1] == "INTEGER_CONT" or @matriz[@index][1] == "FLOAT_CONST" or @matriz[@index][1] == "LBRACKET"
+    if @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "INTEGER_CONST" or @matriz[@index][1].to_s == "FLOAT_CONST" or @matriz[@index][1].to_s == "LBRACKET"
       termo()
       adicao_opc()
     else
@@ -240,19 +229,17 @@ module AnalisadorSintatico
   end
 
   def adicao_opc()
-    if @matriz[@index][1] == "PLUS" or @matriz[@index][1] == "MINUS"
+    if @matriz[@index][1].to_s == "PLUS" or @matriz[@index][1].to_s == "MINUS"
       op_adicao()
       termo()
       adicao_opc()
-    else
-      @index += 1
     end
   end
 
   def op_adicao()
-    if @matriz[@index][1] == "PLUS"
+    if @matriz[@index][1].to_s == "PLUS"
       casa("PLUS")
-    elsif @matriz[@index][1] == "MINUS"
+    elsif @matriz[@index][1].to_s == "MINUS"
       casa("MINUS")
     else
       retorna_erro()
@@ -260,7 +247,7 @@ module AnalisadorSintatico
   end
 
   def termo()
-    if @matriz[@index][1] == "ID" or @matriz[@index][1] == "INTEGER_CONST" or @matriz[@index][1] == "FLOAT_CONST" or @matriz[@index][1] == "LBRACKET"
+    if @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "INTEGER_CONST" or @matriz[@index][1].to_s == "FLOAT_CONST" or @matriz[@index][1].to_s == "LBRACKET"
       fator()
       termo_opc()
     else
@@ -269,19 +256,17 @@ module AnalisadorSintatico
   end
 
   def termo_opc()
-    if @matriz[@index][1] == "MULT" or @matriz[@index][1] == "DIV"
+    if @matriz[@index][1].to_s == "MULT" or @matriz[@index][1].to_s == "DIV"
       op_mult()
       fator()
       termo_opc()
-    else
-      @index += 1
     end
   end
 
   def op_mult()
-    if @matriz[@index][1] == "MULT"
+    if @matriz[@index][1].to_s == "MULT"
       casa("MULT")
-    elsif @matriz[@index][1] == "DIV"
+    elsif @matriz[@index][1].to_s == "DIV"
       casa("DIV")
     else
       retorna_erro()
@@ -289,25 +274,27 @@ module AnalisadorSintatico
   end
 
   def fator()
-    if @matriz[@index][1] == "ID"
+    if @matriz[@index][1].to_s == "ID"
       casa("ID")
-    elsif @matriz[@index][1] == "INTEGER_CONST"
+    elsif @matriz[@index][1].to_s == "INTEGER_CONST"
       casa("INTEGER_CONST")
-    elsif @matriz[@index][1] == "FLOAT_CONST"
+    elsif @matriz[@index][1].to_s == "FLOAT_CONST"
       casa("FLOAT_CONST")
-    elsif @matriz[@index][1] == "LBRACKET"
+    elsif @matriz[@index][1].to_s == "LBRACKET"
       casa("LBRACKET")
       expressa()
       casa("RBRACKET")
+    else
+      retorna_erro()
     end
   end
 
   def casa(token_esperado)
     if @matriz[@index][1].to_s == token_esperado.to_s
-      puts "to passando por aqui #{@matriz[@index][1]} no indice #{@index}"
+      puts "to passando por aqui #{@matriz[@index][1].to_s} no indice #{@index}"
       @index += 1
       if @index < @matriz.length
-        return @matriz[@index][1]
+        return @matriz[@index][1].to_s
       else
         exit!
       end
@@ -317,8 +304,7 @@ module AnalisadorSintatico
   end
 
   def retorna_erro()
-    puts "ERRO: valor #{@matriz[@index][1]} não encontrado na linha #{@matriz[@index][2]}"
-    @index += 1
+    puts "ERRO: valor #{@matriz[@index][1].to_s} não encontrado na linha #{@matriz[@index][2]}"
   end
 
 end
