@@ -24,10 +24,10 @@ module AnalisadorSintatico
   end
 
   def decl_comando()
-    if @matriz[@index][1] == "INT" or @matriz[@index][1] == "FLOAT"
+    if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
       declaracao()
       decl_comando()
-    elsif @matriz[@index][1] == "LBRACE" or @matriz[@index][1] == "ID" or @matriz[@index][1] == "IF" or
+    elsif @matriz[@index][1].to_s == "LBRACE" or @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "IF" or
       @matriz[@index][1] == "WHILE" or @matriz[@index][1] == "READ" or @matriz[@index][1] == "PRINT" or @matriz[@index][1] == "FOR"
       comando()
       decl_comando()
@@ -68,6 +68,7 @@ module AnalisadorSintatico
     if @matriz[@index][1] == "INT"
       casa("INT")
     elsif @matriz[@index][1] == "FLOAT"
+      puts "PASSA aqui"
       casa("FLOAT")
     else
       puts "ERRO: valor não esperado #{@matriz[@index][1]} na linha #{@matriz[@index][2]}"
