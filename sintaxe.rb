@@ -4,6 +4,7 @@ module AnalisadorSintatico
   def analise_sintatica
     @token_entrada, @matriz = Automata::state_zero
     @index = 0
+    @tabela_simbolos = {}
     programa()
   end
 
@@ -36,6 +37,7 @@ module AnalisadorSintatico
   def declaracao()
     if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
       tipo()
+      hash_simbolos()
       casa("ID")
       decl2()
     else
@@ -46,6 +48,7 @@ module AnalisadorSintatico
   def decl2()
     if @matriz[@index][1].to_s == "COMMA"
       casa("COMMA")
+      hash_simbolos()
       casa("ID")
       decl2()
     elsif @matriz[@index][1].to_s == "PCOMMA"
@@ -101,6 +104,7 @@ module AnalisadorSintatico
 
   def atribuicao()
     if @matriz[@index][1].to_s == "ID"
+      hash_simbolos()
       casa("ID")
       casa("ATTR")
       expressao()
@@ -182,6 +186,7 @@ module AnalisadorSintatico
       casa("RBRACKET")
       comando()
     elsif @matriz[@index][1].to_s == "ID"
+      hash_simbolos()
       casa("ID")
       casa("ATTR")
       expressao()
@@ -275,6 +280,7 @@ module AnalisadorSintatico
 
   def fator()
     if @matriz[@index][1].to_s == "ID"
+      hash_simbolos()
       casa("ID")
     elsif @matriz[@index][1].to_s == "INTEGER_CONST"
       casa("INTEGER_CONST")
@@ -282,7 +288,7 @@ module AnalisadorSintatico
       casa("FLOAT_CONST")
     elsif @matriz[@index][1].to_s == "LBRACKET"
       casa("LBRACKET")
-      expressa()
+      expressao()
       casa("RBRACKET")
     else
       retorna_erro()
@@ -305,6 +311,14 @@ module AnalisadorSintatico
 
   def retorna_erro()
     puts "ERRO: valor #{@matriz[@index][1].to_s} não encontrado na linha #{@matriz[@index][2]}"
+  end
+
+  def hash_simbolos()
+    if !@tabela_simbolos[@matriz[@index][0]]
+      @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @matriz[@index-1][1]] 
+      puts @tabela_simbolos
+    end
+    return @tabela_simbolos 
   end
 
 end

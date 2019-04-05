@@ -4,7 +4,7 @@ module Automata
   def le_arquivo
     letras = []
 
-    f = File.open('soma.c', 'r')
+    f = File.open('teste1.c', 'r')
     f.each_char do |char|
       letras << char
     end
@@ -39,11 +39,11 @@ module Automata
           final_result << state_two(tokens)
           matriz_final << [tokens, state_two(tokens), line]
           tokens = []
-          if char == ')' or char == '(' or char == '=' or char == ';' or char == '+' or char == '-' or char == '>' or char == '<' or char == '<=' or char == '>='
+          if char == ',' or char == ')' or char == '(' or char == '=' or char == ';' or char == '+' or char == '-' or char == '>' or char == '<' or char == '<=' or char == '>=' or char == '*' or char == '/'
             final_result << Token::MY_HASH[char]
             matriz_final << [char, Token::MY_HASH[char], line]
           end
-        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '=' or char == '>' or char == '<' or char == '<=' or char == '>='
+        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '=' or char == '>' or char == '<' or char == '<=' or char == '>=' or char == '*' or char == '/'
           if char == ';' or char == ',' or char == ')'
             numero = numero.join
             if numero.match(/[0-9]+[.][0-9]+/)
