@@ -26,10 +26,12 @@ module Automata
     final_result = []
     tokens = []
     numero = []
+    cond = []
     t = []
     matriz_final = []
     input = le_arquivo
     input.each do |char|
+      puts "char atual #{char} no index #{input.index(char)}"
       if char.match(/[a-zA-Z]/)
         tokens << char
       else
@@ -39,12 +41,21 @@ module Automata
           final_result << state_two(tokens)
           matriz_final << [tokens, state_two(tokens), line]
           tokens = []
-          if char == ',' or char == ')' or char == '(' or char == '=' or char == ';' or char == '+' or char == '-' or char == '>' or char == '<' or char == '<=' or char == '>=' or char == '*' or char == '/'
+          if /[*,()=;+-\/]/ =~ char
             final_result << Token::MY_HASH[char]
             matriz_final << [char, Token::MY_HASH[char], line]
           end
-        elsif char == ',' or char == ';' or char == '[' or char == ']' or char == '(' or char == ')' or char == '{' or char == '}' or char == '-' or char == '+' or char == '=' or char == '>' or char == '<' or char == '<=' or char == '>=' or char == '*' or char == '/'
-          if char == ';' or char == ',' or char == ')'
+        elsif /[\[\](){}<>=*\/,;+-]/ =~ char
+          if  /[=]/ =~ char
+            #puts "aqui #{char}"
+            if input[input.index(char) - 1] == '>'
+              puts "1 - sou o #{input[input.index(char) - 1]}"
+            else
+              puts "2 - sou o #{input[input.index(char) - 1]}"
+            end
+
+          end
+          if /[,;+-\/)*=]/ =~ char
             numero = numero.join
             if numero.match(/[0-9]+[.][0-9]+/)
               final_result << :FLOAT_CONST
@@ -57,11 +68,6 @@ module Automata
               matriz_final << [numero, :INTEGER_CONST, line]
             end
             numero = []
-          elsif char == '>'
-            if input[input.index(char) + 1] == '='
-              final_result << Token::MY_HASH['>=']
-              next
-            end
           end
           final_result << Token::MY_HASH[char]
           matriz_final << [char, Token::MY_HASH[char], line]
