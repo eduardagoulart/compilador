@@ -1,10 +1,15 @@
 require_relative 'analisador_lexico'
 
 module AnalisadorSintatico
-  def analise_sintatica
+  def construtor
     @token_entrada, @matriz = Automata::state_zero
     @index = 0
     @tabela_simbolos = {}
+    @tipo_variavel
+  end
+
+  def analise_sintatica
+    construtor
     programa()
   end
 
@@ -64,8 +69,10 @@ module AnalisadorSintatico
 
   def tipo()
     if @matriz[@index][1].to_s == "INT"
+      @tipo_variavel = "INT"
       casa("INT")
     elsif @matriz[@index][1].to_s == "FLOAT"
+      @tipo_variavel = "FLOAT"
       casa("FLOAT")
     else
       retorna_erro
@@ -297,7 +304,7 @@ module AnalisadorSintatico
 
   def casa(token_esperado)
     if @matriz[@index][1].to_s == token_esperado.to_s
-      puts "to passando por aqui #{@matriz[@index][1].to_s} no indice #{@index}"
+      puts "casa #{@matriz[@index][1].to_s} no indice #{@index}"
       @index += 1
       if @index < @matriz.length
         return @matriz[@index][1].to_s
@@ -315,7 +322,7 @@ module AnalisadorSintatico
 
   def hash_simbolos()
     if !@tabela_simbolos[@matriz[@index][0]]
-      @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @matriz[@index-1][1]] 
+      @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @tipo_variavel] 
       puts @tabela_simbolos
     end
     return @tabela_simbolos 
