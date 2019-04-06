@@ -1,14 +1,16 @@
 require_relative 'analisador_lexico'
+include Teste
 
 module AnalisadorSintatico
   def construtor
-    @token_entrada, @matriz = Automata::state_zero
+    Teste::le_arquivo
+    @token_entrada, @matriz = Teste::automato
     @index = 0
     @tabela_simbolos = {}
     @tipo_variavel
   end
 
-  def analise_sintatica
+  def analise_sintatica()
     construtor
     programa()
   end
@@ -304,11 +306,13 @@ module AnalisadorSintatico
 
   def casa(token_esperado)
     if @matriz[@index][1].to_s == token_esperado.to_s
-      puts "casa #{@matriz[@index][1].to_s} no indice #{@index}"
       @index += 1
       if @index < @matriz.length
         return @matriz[@index][1].to_s
       else
+        puts @tabela_simbolos
+        puts "Análise sintática concluída"
+        return @tabela_simbolos
         exit!
       end
     else
@@ -323,7 +327,6 @@ module AnalisadorSintatico
   def hash_simbolos()
     if !@tabela_simbolos[@matriz[@index][0]]
       @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @tipo_variavel] 
-      puts @tabela_simbolos
     end
     return @tabela_simbolos 
   end
@@ -331,4 +334,4 @@ module AnalisadorSintatico
 end
 
 include AnalisadorSintatico
-analise_sintatica
+analise_sintatica()
