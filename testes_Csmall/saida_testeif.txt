@@ -1,0 +1,47 @@
+-------Token Buffer------------
+Token          | Num. da Linha | Lexema
+----------------------------------------------- 
+INT              1 		 int       
+MAIN             1 		 main      
+LBRACKET         1 		 (         
+RBRACKET         1 		 )         
+LBRACE           2 		 {         
+INT              3 		 int       
+ID               3 		 c         
+ATTR             3 		 =         
+INTEGER_CONST    3 		 100       
+PCOMMA           3 		 ;         
+IF               4 		 if        
+LBRACKET         4 		 (         
+LBRACKET         4 		 (         
+ID               4 		 c         
+NE               4 		 !=        
+INTEGER_CONST    4 		 1         
+RBRACKET         4 		 )         
+OR               4 		 ||        
+LBRACKET         4 		 (         
+ID               4 		 c         
+EQ               4 		 ==        
+INTEGER_CONST    4 		 1         
+RBRACKET         4 		 )         
+RBRACKET         4 		 )         
+LBRACE           4 		 {         
+ID               5 		 c         
+ATTR             5 		 =         
+ID               5 		 c         
+MINUS            5 		 -         
+INTEGER_CONST    5 		 2         
+DIV              5 		 /         
+INTEGER_CONST    5 		 4         
+MULT             5 		 *         
+INTEGER_CONST    5 		 10        
+PCOMMA           5 		 ;         
+RBRACE           6 		 }         
+PRINT            7 		 print     
+LBRACKET         7 		 (         
+ID               7 		 c         
+RBRACKET         7 		 )         
+PCOMMA           7 		 ;         
+RBRACE           8 		 }         
+EOF              0 		           
+---------------------------------
