@@ -5,9 +5,15 @@ module AnalisadorSintatico
   def construtor
     Teste::le_arquivo
     @token_entrada, @matriz = Teste::automato
+    
+    puts '-------Token Buffer------------'
+    puts 'Token          | Num. da Linha | Lexema'
     @index = 0
     @tabela_simbolos = {}
     @tipo_variavel
+  end
+  def saida
+    puts "#{@matriz[@index][1]}     | #{@matriz[@index][2]}       | #{@matriz[@index][0]}"
   end
 
   def analise_sintatica()
@@ -308,8 +314,10 @@ module AnalisadorSintatico
     if @matriz[@index][1].to_s == token_esperado.to_s
       @index += 1
       if @index < @matriz.length
+        saida
         return @matriz[@index][1].to_s
       else
+        # saida
         puts @tabela_simbolos
         puts "Análise sintática concluída"
         return @tabela_simbolos
