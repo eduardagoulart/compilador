@@ -25,7 +25,7 @@ module AnalisadorSintatico
   end
 
   def programa()
-    if @matriz[@index][1].to_s == "INT"
+    if ConjuntoFirst::MY_HASH['programa']
       casa("INT")
       casa("MAIN")
       casa("LBRACKET")
@@ -34,7 +34,8 @@ module AnalisadorSintatico
       decl_comando()
       casa("RBRACE")
     else
-      retorna_erro('programa')
+      @index+=1
+      programa()
     end
   end
 
@@ -314,12 +315,12 @@ module AnalisadorSintatico
   end
 
   def casa(token_esperado)
-    @tok_esperado
+    @tok_esperado = token_esperado
     if @matriz[@index][1].to_s == token_esperado.to_s
       if @index < @matriz.length
         saida
         @index += 1
-        return @matriz[@index][1].to_s
+        return @matriz[@index]
       else
         # saida
         puts @tabela_simbolos
