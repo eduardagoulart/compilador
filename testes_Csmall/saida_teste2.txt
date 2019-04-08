@@ -1,0 +1,60 @@
+-------Token Buffer------------
+Token          | Num. da Linha | Lexema
+----------------------------------------------- 
+INT              1 		 int       
+MAIN             1 		 main      
+LBRACKET         1 		 (         
+RBRACKET         1 		 )         
+LBRACE           2 		 {         
+INT              3 		 int       
+ID               3 		 x         
+COMMA            3 		 ,         
+ID               3 		 y         
+COMMA            3 		 ,         
+ID               3 		 z         
+PCOMMA           3 		 ;         
+WHILE            4 		 while     
+LBRACKET         4 		 (         
+ID               4 		 x         
+LT               4 		 <         
+ID               4 		 y         
+PLUS             4 		 +         
+ID               4 		 z         
+MULT             4 		 *         
+INTEGER_CONST    4 		 9         
+MINUS            4 		 -         
+INTEGER_CONST    4 		 3         
+RBRACKET         4 		 )         
+LBRACE           5 		 {         
+ID               6 		 x         
+ATTR             6 		 =         
+ID               6 		 x         
+MINUS            6 		 -         
+INTEGER_CONST    6 		 3         
+PCOMMA           6 		 ;         
+IF               7 		 if        
+LBRACKET         7 		 (         
+ID               7 		 x         
+GT               7 		 >         
+ID               7 		 y         
+RBRACKET         7 		 )         
+ID               8 		 x         
+ATTR             8 		 =         
+INTEGER_CONST    8 		 0         
+PCOMMA           8 		 ;         
+ID               9 		 y         
+ATTR             9 		 =         
+ID               9 		 y         
+PLUS             9 		 +         
+INTEGER_CONST    9 		 1         
+PCOMMA           9 		 ;         
+FLOAT            10 		 float     
+ID               10 		 k         
+PCOMMA           10 		 ;         
+RBRACE           11 		 }         
+INT              12 		 int       
+ID               12 		 z         
+PCOMMA           12 		 ;         
+RBRACE           13 		 }         
+EOF              0 		           
+---------------------------------

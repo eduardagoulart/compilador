@@ -1,0 +1,66 @@
+-------Token Buffer------------
+Token          | Num. da Linha | Lexema
+----------------------------------------------- 
+INT              1 		 int       
+MAIN             1 		 main      
+LBRACKET         1 		 (         
+RBRACKET         1 		 )         
+LBRACE           1 		 {         
+INT              2 		 int       
+ID               2 		 i         
+COMMA            2 		 ,         
+ID               2 		 j         
+COMMA            2 		 ,         
+ID               2 		 cont      
+ATTR             2 		 =         
+INTEGER_CONST    2 		 0         
+PCOMMA           2 		 ;         
+FOR              3 		 for       
+LBRACKET         3 		 (         
+ID               3 		 i         
+ATTR             3 		 =         
+INTEGER_CONST    3 		 0         
+PCOMMA           3 		 ;         
+ID               3 		 i         
+LT               3 		 <         
+INTEGER_CONST    3 		 2         
+MULT             3 		 *         
+LBRACKET         3 		 (         
+INTEGER_CONST    3 		 4         
+MINUS            3 		 -         
+INTEGER_CONST    3 		 3         
+DIV              3 		 /         
+INTEGER_CONST    3 		 5         
+RBRACKET         3 		 )         
+PCOMMA           3 		 ;         
+ID               3 		 i         
+ATTR             3 		 =         
+ID               3 		 i         
+PLUS             3 		 +         
+INTEGER_CONST    3 		 1         
+RBRACKET         3 		 )         
+FOR              4 		 for       
+LBRACKET         4 		 (         
+ID               4 		 j         
+ATTR             4 		 =         
+INTEGER_CONST    4 		 10        
+PCOMMA           4 		 ;         
+ID               4 		 j         
+GT               4 		 >         
+INTEGER_CONST    4 		 0         
+PCOMMA           4 		 ;         
+ID               4 		 j         
+ATTR             4 		 =         
+ID               4 		 j         
+MINUS            4 		 -         
+INTEGER_CONST    4 		 1         
+RBRACKET         4 		 )         
+ID               5 		 cont      
+ATTR             5 		 =         
+ID               5 		 cont      
+PLUS             5 		 +         
+INTEGER_CONST    5 		 1         
+PCOMMA           5 		 ;         
+RBRACE           6 		 }         
+EOF              0 		           
+---------------------------------

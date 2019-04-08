@@ -1,10 +1,26 @@
 require_relative 'analisador_lexico'
+require_relative 'conjFirst'
+include Teste
+include ConjuntoFirst
 
 module AnalisadorSintatico
-  def analise_sintatica
-    @token_entrada, @matriz = Automata::state_zero
+  def construtor
+    Teste::le_arquivo
+    @token_entrada, @matriz = Teste::automato
+
+    puts '-------Token Buffer------------'
+    puts 'Token          | Num. da Linha | Lexema'
     @index = 0
     @tabela_simbolos = {}
+    @tipo_variavel
+    @tok_esperado
+  end
+  def saida
+    puts "#{@matriz[@index][1]}".ljust(23) + "#{@matriz[@index][2]}".ljust(10) + "#{@matriz[@index][0]}"
+  end
+
+  def analise_sintatica()
+    construtor
     programa()
   end
 
@@ -27,7 +43,7 @@ module AnalisadorSintatico
       declaracao()
       decl_comando()
     elsif @matriz[@index][1].to_s == "LBRACE" or @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "IF" or
-      @matriz[@index][1].to_s == "WHILE" or @matriz[@index][1].to_s == "READ" or @matriz[@index][1].to_s == "PRINT" or 
+      @matriz[@index][1].to_s == "WHILE" or @matriz[@index][1].to_s == "READ" or @matriz[@index][1].to_s == "PRINT" or
       @matriz[@index][1].to_s == "FOR"
       comando()
       decl_comando()
@@ -41,7 +57,7 @@ module AnalisadorSintatico
       casa("ID")
       decl2()
     else
-      retorna_erro
+      retorna_erro('declaracao')
     end
   end
 
@@ -58,17 +74,19 @@ module AnalisadorSintatico
       expressao()
       decl2()
     else
-      retorna_erro
+      retorna_erro('decl2')
     end
   end
 
   def tipo()
     if @matriz[@index][1].to_s == "INT"
+      @tipo_variavel = "INT"
       casa("INT")
     elsif @matriz[@index][1].to_s == "FLOAT"
+      @tipo_variavel = "FLOAT"
       casa("FLOAT")
     else
-      retorna_erro
+      retorna_erro('tipo')
     end
   end
 
@@ -88,7 +106,7 @@ module AnalisadorSintatico
     elsif @matriz[@index][1].to_s == "FOR"
       comando_for()
     else
-      retorna_erro()
+      retorna_erro('comando')
     end
   end
 
@@ -98,7 +116,7 @@ module AnalisadorSintatico
       decl_comando()
       casa("RBRACE")
     else
-      retorna_erro()
+      retorna_erro('bloco')
     end
   end
 
@@ -110,7 +128,7 @@ module AnalisadorSintatico
       expressao()
       casa("PCOMMA")
     else
-      retorna_erro()
+      retorna_erro('atribuicao')
     end
   end
 
@@ -123,7 +141,7 @@ module AnalisadorSintatico
       comando()
       comando_senao()
     else
-      retorna_erro()
+      retorna_erro('comando_se')
     end
   end
 
@@ -142,7 +160,7 @@ module AnalisadorSintatico
       casa("RBRACKET")
       comando()
     else
-      retorna_erro()
+      retorna_erro('comando_enquanto')
     end
   end
 
@@ -152,7 +170,7 @@ module AnalisadorSintatico
       casa("ID")
       casa("PCOMMA")
     else
-      retorna_erro()
+      retorna_erro('comando_read')
     end
   end
 
@@ -164,7 +182,7 @@ module AnalisadorSintatico
       casa("RBRACKET")
       casa("PCOMMA")
     else
-      retorna_erro()
+      retorna_erro('comando_print')
     end
   end
 
@@ -177,7 +195,7 @@ module AnalisadorSintatico
       expressao()
       casa("PCOMMA")
     else
-      retorna_erro()
+      retorna_erro('comando_for')
     end
   end
 
@@ -189,7 +207,7 @@ module AnalisadorSintatico
       hash_simbolos()
       casa("ID")
       casa("ATTR")
-      expressao()
+      expressao('atribuicao_for')
     end
   end
 
@@ -198,7 +216,7 @@ module AnalisadorSintatico
       adicao()
       relacao_opc()
     else
-      retorna_erro()
+      retorna_erro('expressao')
     end
   end
 
@@ -206,7 +224,7 @@ module AnalisadorSintatico
     if @matriz[@index][1].to_s == "LT" or @matriz[@index][1].to_s == "LE" or @matriz[@index][1].to_s == "GT" or @matriz[@index][1].to_s == "GE"
       op_rel()
       adicao()
-      relacao_opc()
+      relacao_opc('relacao_opc')
     end
   end
 
@@ -220,7 +238,7 @@ module AnalisadorSintatico
     elsif @matriz[@index][1].to_s == "GE"
       casa("GE")
     else
-      retorna_erro()
+      retorna_erro('op_rel')
     end
   end
 
@@ -229,7 +247,7 @@ module AnalisadorSintatico
       termo()
       adicao_opc()
     else
-      retorna_erro()
+      retorna_erro('adicao')
     end
   end
 
@@ -237,7 +255,7 @@ module AnalisadorSintatico
     if @matriz[@index][1].to_s == "PLUS" or @matriz[@index][1].to_s == "MINUS"
       op_adicao()
       termo()
-      adicao_opc()
+      adicao_opc('adicao_opc')
     end
   end
 
@@ -247,7 +265,7 @@ module AnalisadorSintatico
     elsif @matriz[@index][1].to_s == "MINUS"
       casa("MINUS")
     else
-      retorna_erro()
+      retorna_erro('op_adicao')
     end
   end
 
@@ -256,7 +274,7 @@ module AnalisadorSintatico
       fator()
       termo_opc()
     else
-      retorna_erro()
+      retorna_erro('termo')
     end
   end
 
@@ -274,7 +292,7 @@ module AnalisadorSintatico
     elsif @matriz[@index][1].to_s == "DIV"
       casa("DIV")
     else
-      retorna_erro()
+      retorna_erro('op_mult')
     end
   end
 
@@ -291,37 +309,45 @@ module AnalisadorSintatico
       expressao()
       casa("RBRACKET")
     else
-      retorna_erro()
+      retorna_erro('fator')
     end
   end
 
   def casa(token_esperado)
+    @tok_esperado = token_esperado
     if @matriz[@index][1].to_s == token_esperado.to_s
-      puts "to passando por aqui #{@matriz[@index][1].to_s} no indice #{@index}"
       @index += 1
       if @index < @matriz.length
+        saida
         return @matriz[@index][1].to_s
       else
+        # saida
+        puts @tabela_simbolos
+        puts "Análise sintática concluída"
+        return @tabela_simbolos
         exit!
       end
     else
-      retorna_erro()
+      casa_erro(token_esperado)
     end
   end
 
-  def retorna_erro()
-    puts "ERRO: valor #{@matriz[@index][1].to_s} não encontrado na linha #{@matriz[@index][2]}"
+  def retorna_erro(terminal)
+    puts "ERRO: valor #{ConjuntoFirst::MY_HASH[terminal]} não encontrado na linha #{@matriz[@index - 1][2]}"
+  end
+
+  def casa_erro(tokenES)
+    puts "ERRO: valor #{tokenES} não encontrado na linha #{@matriz[@index - 1][2]}"
   end
 
   def hash_simbolos()
     if !@tabela_simbolos[@matriz[@index][0]]
-      @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @matriz[@index-1][1]] 
-      puts @tabela_simbolos
+      @tabela_simbolos[@matriz[@index][0]] = [@matriz[@index][0], @matriz[@index][2], @tipo_variavel]
     end
-    return @tabela_simbolos 
+    return @tabela_simbolos
   end
 
 end
 
 include AnalisadorSintatico
-analise_sintatica
+analise_sintatica()
