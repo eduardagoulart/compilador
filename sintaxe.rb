@@ -34,7 +34,7 @@ module AnalisadorSintatico
       decl_comando()
       casa("RBRACE")
     else
-      retorna_erro
+      retorna_erro('programa')
     end
   end
 
@@ -314,11 +314,11 @@ module AnalisadorSintatico
   end
 
   def casa(token_esperado)
-    @tok_esperado = token_esperado
+    @tok_esperado
     if @matriz[@index][1].to_s == token_esperado.to_s
-      @index += 1
       if @index < @matriz.length
         saida
+        @index += 1
         return @matriz[@index][1].to_s
       else
         # saida
@@ -337,7 +337,7 @@ module AnalisadorSintatico
   end
 
   def casa_erro(tokenES)
-    puts "ERRO: valor #{tokenES} não encontrado na linha #{@matriz[@index - 1][2]}"
+    puts "ERRO: valor #{tokenES} não encontrado na linha #{@matriz[@index][2]}"
   end
 
   def hash_simbolos()
