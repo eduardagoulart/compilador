@@ -1,5 +1,6 @@
 require_relative 'analisador_lexico'
 require_relative 'conjFirst'
+require 'tree'
 include Teste
 include ConjuntoFirst
 
@@ -22,41 +23,44 @@ module AnalisadorSintatico
   def analise_sintatica()
     construtor
     programa()
+    puts @tabela_simbolos
   end
 
   def programa()
-    if ConjuntoFirst::MY_HASH['programa']
+    if @matriz[@index][1].to_s  == "INT"
       casa("INT")
       casa("MAIN")
+      root_node = Tree::TreeNone.new("MAIN")
       casa("LBRACKET")
       casa("RBRACKET")
       casa("LBRACE")
-      decl_comando()
+      decl_comando(root_node)
       casa("RBRACE")
     else
-      @index+=1
-      programa()
+
+      retorna_erro
     end
   end
 
-  def decl_comando
+  def decl_comando(node)
     if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
-      declaracao()
-      decl_comando()
+      declaracao(node)
+      decl_comando(node)
     elsif @matriz[@index][1].to_s == "LBRACE" or @matriz[@index][1].to_s == "ID" or @matriz[@index][1].to_s == "IF" or
       @matriz[@index][1].to_s == "WHILE" or @matriz[@index][1].to_s == "READ" or @matriz[@index][1].to_s == "PRINT" or
       @matriz[@index][1].to_s == "FOR"
-      comando()
-      decl_comando()
+      comando(node)
+      decl_comando(node)
     end
   end
 
-  def declaracao()
+  def declaracao(node)
     if @matriz[@index][1].to_s == "INT" or @matriz[@index][1].to_s == "FLOAT"
       tipo()
       hash_simbolos()
       casa("ID")
-      decl2()
+      node << Tree::TreeNode.new("ID", @matriz[@index][1].to_s)
+      decl2(node)
     else
       retorna_erro('declaracao')
     end
@@ -208,7 +212,7 @@ module AnalisadorSintatico
       hash_simbolos()
       casa("ID")
       casa("ATTR")
-      expressao('atribuicao_for')
+      expressao()
     end
   end
 
@@ -225,7 +229,7 @@ module AnalisadorSintatico
     if @matriz[@index][1].to_s == "LT" or @matriz[@index][1].to_s == "LE" or @matriz[@index][1].to_s == "GT" or @matriz[@index][1].to_s == "GE"
       op_rel()
       adicao()
-      relacao_opc('relacao_opc')
+      relacao_opc()
     end
   end
 
@@ -256,7 +260,7 @@ module AnalisadorSintatico
     if @matriz[@index][1].to_s == "PLUS" or @matriz[@index][1].to_s == "MINUS"
       op_adicao()
       termo()
-      adicao_opc('adicao_opc')
+      adicao_opc()
     end
   end
 
@@ -322,10 +326,6 @@ module AnalisadorSintatico
         @index += 1
         return @matriz[@index]
       else
-        # saida
-        puts @tabela_simbolos
-        puts "Análise sintática concluída"
-        return @tabela_simbolos
         exit!
       end
     else
